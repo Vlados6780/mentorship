@@ -1,0 +1,29 @@
+<div class="verification-container">
+  <div *ngIf="isConfirmed" class="success-message">
+    <h2>{{ message }}</h2>
+  </div>
+
+  <div *ngIf="!isConfirmed">
+    <div *ngIf="token && message" class="message">
+      <p>{{ message }}</p>
+    </div>
+
+    <div *ngIf="!token">
+      <h2>Email Verification</h2>
+      <p>A verification email has been sent to <strong>{{ email }}</strong>.</p>
+      <p>Please check your inbox and click the link in the email to confirm your address.</p>
+
+      <div class="resend-section">
+        <p>Didn't receive the email?</p>
+        <button (click)="resendEmail()" [disabled]="isResending">
+          {{ isResending ? 'Sending...' : 'Resend Email' }}
+        </button>
+        <p *ngIf="message" class="message">{{ message }}</p>
+      </div>
+
+      <div class="link">
+        <p>Return to the <a routerLink="/login">login page</a></p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,132 @@
+.verification-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 191, 255, 0.3);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.verification-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 191, 255, 0.5);
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  font-size: 1.8rem;
+  text-shadow: 0 0 5px rgba(0, 191, 255, 0.5);
+  animation: glowText 1.5s infinite alternate;
+}
+
+p {
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+strong {
+  color: #00bfff;
+}
+
+.resend-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #444444;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #00bfff, #00ff00);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 1rem 0;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #00ff00, #00bfff);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+button:disabled {
+  background: #444444;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.message {
+  color: #00bfff;
+  margin: 1rem 0;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(0, 191, 255, 0.3);
+}
+
+.link {
+  margin-top: 1.5rem;
+  color: #cccccc;
+}
+
+.link a {
+  color: #00bfff;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.link a:hover {
+  color: #00ff00;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.success-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  text-align: center;
+}
+
+.success-message h2 {
+  color: #00ff00;
+  font-size: 1.8rem;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  animation: glowTextGreen 1.5s infinite alternate;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 5px rgba(0, 191, 255, 0.5); }
+  to { text-shadow: 0 0 10px rgba(0, 191, 255, 0.8); }
+}
+
+@keyframes glowTextGreen {
+  from { text-shadow: 0 0 5px rgba(0, 255, 0, 0.5); }
+  to { text-shadow: 0 0 10px rgba(0, 255, 0, 0.8); }
+}
+
+@media (max-width: 768px) {
+  .verification-container {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+  button {
+    font-size: 0.9rem;
+  }
+}

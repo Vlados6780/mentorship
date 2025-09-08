@@ -1,0 +1,79 @@
+<div class="mentors-container">
+  <h2>Our Mentors</h2>
+
+  <app-mentor-search
+    (searchResults)="handleSearchResults($event)"
+    (isSearching)="handleSearching($event)">
+  </app-mentor-search>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading mentors list...
+  </div>
+
+  <div *ngIf="!isLoading && mentors.length === 0" class="no-mentors">
+    No mentors available at the moment
+  </div>
+
+  <div class="mentors-grid">
+    <div *ngFor="let mentor of mentors" class="mentor-card">
+      <div class="mentor-header">
+        <div class="mentor-picture">
+          <img *ngIf="mentor.profilePictureUrl" [src]="mentor.profilePictureUrl" alt="Mentor photo">
+          <div *ngIf="!mentor.profilePictureUrl" class="no-picture">
+            {{ mentor.firstName.charAt(0) }}{{ mentor.lastName.charAt(0) }}
+          </div>
+        </div>
+        <div class="mentor-info">
+          <h3>{{ mentor.firstName }} {{ mentor.lastName }}</h3>
+          <div class="mentor-specialization">{{ mentor.specialization }}</div>
+          <div class="mentor-experience">{{ mentor.experienceYears }} years of experience</div>
+          <div class="mentor-rating">
+            <span *ngFor="let star of getRatingStars(mentor.averageRating)" class="star" [ngClass]="star">
+              ★
+            </span>
+            <span class="rating-value">{{ mentor.averageRating.toFixed(1) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mentor-bio">{{ mentor.bio }}</div>
+
+      <div class="mentor-details">
+        <div class="detail-item">
+          <span class="label">Age:</span>
+          <span class="value">{{ mentor.age }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Hourly rate:</span>
+          <span class="value">{{ mentor.hourlyRate }} $/hour</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Target audience:</span>
+          <span class="value">{{ mentor.mentorTargetStudents }}</span>
+        </div>
+      </div>
+
+      <div class="mentor-actions">
+        <button class="review-btn" (click)="openReviewsModal(mentor)">
+          Reviews ({{ mentor.averageRating.toFixed(1) }})
+        </button>
+        <button class="connect-btn" (click)="connectWithMentor(mentor.mentorId)">
+          Contact mentor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-review-modal
+    *ngIf="selectedMentorForReviews"
+    [mentorId]="selectedMentorForReviews.id"
+    [mentorName]="selectedMentorForReviews.name"
+    (close)="closeReviewsModal()">
+  </app-review-modal>
+
+  <app-error-modal
+    *ngIf="showErrorModal"
+    [message]="errorMessage"
+    (close)="closeErrorModal()">
+  </app-error-modal>
+</div>

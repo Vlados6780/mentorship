@@ -1,0 +1,167 @@
+<div class="profile-container">
+  <h2>Complete Registration</h2>
+  <p>Fill in your profile information</p>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        placeholder="Enter your first name"
+      />
+      <div class="error" *ngIf="profileForm.get('firstName')?.invalid && (profileForm.get('firstName')?.dirty || profileForm.get('firstName')?.touched)">
+        <div *ngIf="profileForm.get('firstName')?.errors?.['required']">First name is required</div>
+        <div *ngIf="profileForm.get('firstName')?.errors?.['maxlength']">First name must not exceed 100 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        placeholder="Enter your last name"
+      />
+      <div class="error" *ngIf="profileForm.get('lastName')?.invalid && (profileForm.get('lastName')?.dirty || profileForm.get('lastName')?.touched)">
+        <div *ngIf="profileForm.get('lastName')?.errors?.['required']">Last name is required</div>
+        <div *ngIf="profileForm.get('lastName')?.errors?.['maxlength']">Last name must not exceed 100 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="bio">About Yourself</label>
+      <textarea
+        id="bio"
+        formControlName="bio"
+        placeholder="Tell us about yourself"
+      ></textarea>
+      <div class="error" *ngIf="profileForm.get('bio')?.invalid && (profileForm.get('bio')?.dirty || profileForm.get('bio')?.touched)">
+        <div *ngIf="profileForm.get('bio')?.errors?.['required']">Bio is required</div>
+        <div *ngIf="profileForm.get('bio')?.errors?.['maxlength']">Bio must not exceed 500 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input
+        type="number"
+        id="age"
+        formControlName="age"
+        placeholder="Enter your age"
+      />
+      <div class="error" *ngIf="profileForm.get('age')?.invalid && (profileForm.get('age')?.dirty || profileForm.get('age')?.touched)">
+        <div *ngIf="profileForm.get('age')?.errors?.['required']">Age is required</div>
+        <div *ngIf="profileForm.get('age')?.errors?.['min']">Age must be at least 18</div>
+        <div *ngIf="profileForm.get('age')?.errors?.['max']">Age must not exceed 120</div>
+      </div>
+    </div>
+
+    <!-- Student Fields -->
+    <div *ngIf="isStudent()">
+      <h3>Student Information</h3>
+
+      <div class="form-group">
+        <label for="educationLevel">Education Level</label>
+        <input
+          type="text"
+          id="educationLevel"
+          formControlName="educationLevel"
+          placeholder="Your education level"
+        />
+        <div class="error" *ngIf="profileForm.get('educationLevel')?.invalid && (profileForm.get('educationLevel')?.dirty || profileForm.get('educationLevel')?.touched)">
+          <div *ngIf="profileForm.get('educationLevel')?.errors?.['required']">Education level is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="learningGoals">Learning Goals</label>
+        <textarea
+          id="learningGoals"
+          formControlName="learningGoals"
+          placeholder="Describe your learning goals"
+        ></textarea>
+        <div class="error" *ngIf="profileForm.get('learningGoals')?.invalid && (profileForm.get('learningGoals')?.dirty || profileForm.get('learningGoals')?.touched)">
+          <div *ngIf="profileForm.get('learningGoals')?.errors?.['required']">Learning goals are required</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mentor Fields -->
+    <div *ngIf="isMentor()">
+      <h3>Mentor Information</h3>
+
+      <div class="form-group">
+        <label for="hourlyRate">Hourly Rate</label>
+        <input
+          type="number"
+          id="hourlyRate"
+          formControlName="hourlyRate"
+          placeholder="Enter your hourly rate"
+        />
+        <div class="error" *ngIf="profileForm.get('hourlyRate')?.invalid && (profileForm.get('hourlyRate')?.dirty || profileForm.get('hourlyRate')?.touched)">
+          <div *ngIf="profileForm.get('hourlyRate')?.errors?.['required']">Hourly rate is required</div>
+          <div *ngIf="profileForm.get('hourlyRate')?.errors?.['min']">Hourly rate cannot be negative</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="specialization">Specialization</label>
+        <input
+          type="text"
+          id="specialization"
+          formControlName="specialization"
+          placeholder="Your specialization"
+        />
+        <div class="error" *ngIf="profileForm.get('specialization')?.invalid && (profileForm.get('specialization')?.dirty || profileForm.get('specialization')?.touched)">
+          <div *ngIf="profileForm.get('specialization')?.errors?.['required']">Specialization is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="experienceYears">Years of Experience</label>
+        <input
+          type="number"
+          id="experienceYears"
+          formControlName="experienceYears"
+          placeholder="Enter your years of experience"
+        />
+        <div class="error" *ngIf="profileForm.get('experienceYears')?.invalid && (profileForm.get('experienceYears')?.dirty || profileForm.get('experienceYears')?.touched)">
+          <div *ngIf="profileForm.get('experienceYears')?.errors?.['required']">Years of experience is required</div>
+          <div *ngIf="profileForm.get('experienceYears')?.errors?.['min']">Years of experience cannot be negative</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mentorTargetStudents">Target Audience</label>
+        <textarea
+          id="mentorTargetStudents"
+          formControlName="mentorTargetStudents"
+          placeholder="Describe your target student audience"
+        ></textarea>
+        <div class="error" *ngIf="profileForm.get('mentorTargetStudents')?.invalid && (profileForm.get('mentorTargetStudents')?.dirty || profileForm.get('mentorTargetStudents')?.touched)">
+          <div *ngIf="profileForm.get('mentorTargetStudents')?.errors?.['required']">Target audience is required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="profilePicture">Profile Picture</label>
+      <input
+        type="file"
+        id="profilePicture"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+      <div class="error" *ngIf="!selectedFile && profileForm.dirty">
+        Profile picture is required
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <button type="submit" [disabled]="profileForm.invalid || !selectedFile">Save Profile</button>
+  </form>
+</div>

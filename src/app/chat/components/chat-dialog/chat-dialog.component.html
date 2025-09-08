@@ -1,0 +1,74 @@
+<div class="chat-dialog">
+  <div *ngIf="isLoading" class="loading">
+    Loading chat...
+  </div>
+
+  <div *ngIf="!isLoading" class="chat-container">
+    <div class="chat-header">
+      <button class="back-btn" (click)="router.navigate(['/chats'])">
+        ←
+      </button>
+      <div class="chat-info">
+        <h2>Chat with {{ (authService.getUserRole() === 'ROLE_STUDENT') ? 'mentor' : 'student' }}</h2>
+      </div>
+    </div>
+
+    <div class="messages-container" #messagesContainer>
+      <div *ngIf="messages.length === 0" class="no-messages">
+        Start chatting now!
+      </div>
+
+      <div *ngFor="let message of messages" class="message-wrapper">
+        <div class="message-avatar" *ngIf="!isOwnMessage(message.senderId)">
+          <div *ngIf="message.senderProfilePictureUrl" class="avatar">
+            <img [src]="message.senderProfilePictureUrl" alt="Avatar">
+          </div>
+          <div *ngIf="!message.senderProfilePictureUrl" class="avatar no-avatar">
+            {{ message.senderName.charAt(0) }}
+          </div>
+        </div>
+
+        <div class="message-bubble">
+          <div class="sender-name" *ngIf="!isOwnMessage(message.senderId)">
+            {{ message.senderName }}
+          </div>
+          <div class="message" [ngClass]="{'own-message': isOwnMessage(message.senderId), 'other-message': !isOwnMessage(message.senderId)}">
+            <div class="message-content">{{ message.content }}</div>
+            <div class="message-time">
+              {{ formatMessageTime(message.sentAt) }}
+              <span *ngIf="isOwnMessage(message.senderId)" class="message-status">
+                {{ message.read ? '✓✓' : '✓' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="message-avatar" *ngIf="isOwnMessage(message.senderId)">
+          <div *ngIf="message.senderProfilePictureUrl" class="avatar">
+            <img [src]="message.senderProfilePictureUrl" alt="Avatar">
+          </div>
+          <div *ngIf="!message.senderProfilePictureUrl" class="avatar no-avatar">
+            {{ message.senderName.charAt(0) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message-input">
+      <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+        <textarea
+          formControlName="message"
+          placeholder="Enter message..."
+          (keydown)="handleKeydown($event)"
+        ></textarea>
+        <button type="submit" [disabled]="messageForm.invalid">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <app-error-modal
+    *ngIf="showErrorModal"
+    [message]="errorMessage"
+    (close)="closeErrorModal()">
+  </app-error-modal>
+</div>

@@ -1,0 +1,63 @@
+<div class="chat-list-container">
+  <h2>My Chats</h2>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading chats...
+  </div>
+
+  <div *ngIf="!isLoading && chats.length === 0" class="no-chats">
+    You don't have any active chats yet
+    <div class="no-chats-action">
+      <a routerLink="/mentors" class="find-mentors-btn">Find Mentors</a>
+    </div>
+  </div>
+
+  <div class="chats">
+    <div
+      *ngFor="let chat of chats"
+      class="chat-item"
+      [ngClass]="{'unread': chat.unreadCount > 0}"
+      (click)="openChat(chat.chatId)"
+    >
+      <div class="chat-picture">
+        <img
+          *ngIf="userRole === 'ROLE_STUDENT' && chat.mentorPictureUrl"
+          [src]="chat.mentorPictureUrl"
+          alt="Mentor photo"
+        >
+        <img
+          *ngIf="userRole === 'ROLE_MENTOR' && chat.studentPictureUrl"
+          [src]="chat.studentPictureUrl"
+          alt="Student photo"
+        >
+        <div
+          *ngIf="(userRole === 'ROLE_STUDENT' && !chat.mentorPictureUrl) ||
+                 (userRole === 'ROLE_MENTOR' && !chat.studentPictureUrl)"
+          class="no-picture"
+        >
+          {{ userRole === 'ROLE_STUDENT' ? chat.mentorName.charAt(0) : chat.studentName.charAt(0) }}
+        </div>
+      </div>
+
+      <div class="chat-info">
+        <div class="chat-header">
+          <span class="chat-name">
+            {{ userRole === 'ROLE_STUDENT' ? chat.mentorName : chat.studentName }}
+          </span>
+          <span class="chat-time">{{ formatDateTime(chat.lastMessageTime) }}</span>
+        </div>
+        <div class="chat-message">{{ chat.lastMessageContent }}</div>
+      </div>
+
+      <div class="chat-status" *ngIf="chat.unreadCount > 0">
+        <span class="unread-count">{{ chat.unreadCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <app-error-modal
+    *ngIf="showErrorModal"
+    [message]="errorMessage"
+    (close)="closeErrorModal()">
+  </app-error-modal>
+</div>

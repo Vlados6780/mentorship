@@ -1,0 +1,12 @@
+<!-- src/app/mentorship/components/review-modal/review-modal.component.html -->
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Feedback about the mentor</h3>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+    <div class="modal-body">
+      <app-mentor-reviews [mentorId]="mentorId" [mentorName]="mentorName"></app-mentor-reviews>
+    </div>
+  </div>
+</div>

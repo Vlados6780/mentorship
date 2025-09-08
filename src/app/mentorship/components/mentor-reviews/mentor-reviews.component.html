@@ -1,0 +1,127 @@
+<!-- src/app/mentorship/components/mentor-reviews/mentor-reviews.component.html -->
+<div class="reviews-container">
+  <h3>Reviews for mentor {{ mentorName }}</h3>
+
+  <div *ngIf="canAddReview" class="add-review-section">
+    <h4>Leave a review</h4>
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+      <div class="rating-input">
+        <label>Rating:</label>
+        <div class="rating-stars">
+          <span *ngFor="let i of [5, 4, 3, 2, 1]"
+                class="rating-star"
+                [ngClass]="{'selected': reviewForm.get('rating')?.value >= i}"
+                (click)="setRating(i)">★</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea id="comment" formControlName="comment" rows="4" placeholder="Share your experience working with this mentor..."></textarea>
+        <div *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched" class="error-message">
+          <span *ngIf="reviewForm.get('comment')?.errors?.['required']">Please write a review</span>
+          <span *ngIf="reviewForm.get('comment')?.errors?.['minlength']">Review must contain at least 10 characters</span>
+          <span *ngIf="reviewForm.get('comment')?.errors?.['maxlength']">Review should not exceed 500 characters</span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="reviewForm.invalid || isSubmitting" class="submit-btn">
+        {{ isSubmitting ? 'Submitting...' : 'Submit review' }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="!canAddReview && !isLoading" class="login-to-review">
+    <p>Only authenticated students can leave reviews</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading reviews...
+  </div>
+
+  <div *ngIf="!isLoading && reviews.length === 0" class="no-reviews">
+    This mentor has no reviews yet
+  </div>
+
+  <div class="reviews-list">
+    <div *ngFor="let review of reviews" class="review-item">
+      <!-- Display review in read mode -->
+      <ng-container *ngIf="editingReviewId !== review.id">
+        <div class="review-header">
+          <div class="reviewer-info">
+            <div class="reviewer-avatar">
+              <img *ngIf="review.studentProfilePictureUrl" [src]="review.studentProfilePictureUrl" alt="Student photo">
+              <div *ngIf="!review.studentProfilePictureUrl" class="no-picture">
+                {{ review.studentFirstName.charAt(0) }}{{ review.studentLastName.charAt(0) }}
+              </div>
+            </div>
+            <div class="reviewer-name">
+              {{ review.studentFirstName }} {{ review.studentLastName }}
+            </div>
+          </div>
+
+          <div class="review-rating">
+            <span *ngFor="let star of getRatingStars(review.rating)" class="star" [ngClass]="star">★</span>
+          </div>
+        </div>
+
+        <div class="review-content">
+          {{ review.comment }}
+        </div>
+
+        <div class="review-footer">
+          <div class="review-date">
+            {{ review.createdAt | date:'dd.MM.yyyy' }}
+            <span *ngIf="review.updatedAt !== review.createdAt">(updated {{ review.updatedAt | date:'dd.MM.yyyy' }})</span>
+          </div>
+
+          <div *ngIf="authService.getCurrentUserId() === review.studentId" class="review-actions">
+            <button class="edit-btn" (click)="startEditReview(review)">
+              Edit
+            </button>
+            <button class="delete-btn" (click)="deleteReview(review.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Display review in edit mode -->
+      <ng-container *ngIf="editingReviewId === review.id">
+        <div class="edit-review-form">
+          <h4>Editing review</h4>
+          <form [formGroup]="editForm" (ngSubmit)="saveEditedReview()">
+            <div class="rating-input">
+              <label>Rating:</label>
+              <div class="rating-stars">
+                <span *ngFor="let i of [5, 4, 3, 2, 1]"
+                      class="rating-star"
+                      [ngClass]="{'selected': editForm.get('rating')?.value >= i}"
+                      (click)="setEditRating(i)">★</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editComment">Comment:</label>
+              <textarea id="editComment" formControlName="comment" rows="4"></textarea>
+              <div *ngIf="editForm.get('comment')?.invalid && editForm.get('comment')?.touched" class="error-message">
+                <span *ngIf="editForm.get('comment')?.errors?.['required']">Please write a review</span>
+                <span *ngIf="editForm.get('comment')?.errors?.['minlength']">Review must contain at least 10 characters</span>
+                <span *ngIf="editForm.get('comment')?.errors?.['maxlength']">Review should not exceed 500 characters</span>
+              </div>
+            </div>
+
+            <div class="edit-actions">
+              <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+              <button type="submit" [disabled]="editForm.invalid || isEditing" class="save-btn">
+                {{ isEditing ? 'Saving...' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <app-error-modal *ngIf="showErrorModal" [message]="errorMessage" (close)="closeErrorModal()"></app-error-modal>
+</div>

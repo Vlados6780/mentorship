@@ -1,0 +1,43 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+a {
+  color: #00bfff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #00ff00;
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+input, textarea, select {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.85rem;
+  }
+}

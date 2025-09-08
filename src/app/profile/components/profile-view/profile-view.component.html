@@ -1,0 +1,187 @@
+<div class="profile-container">
+  <div *ngIf="isLoading" class="loading">
+    Loading profile...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="profile && !isLoading" class="profile-content">
+    <!-- Profile picture -->
+    <div class="profile-picture-container">
+      <div class="profile-picture" (click)="profilePictureInput.click()">
+        <img *ngIf="profilePictureUrl" [src]="profilePictureUrl" alt="Profile picture">
+        <div *ngIf="!profilePictureUrl" class="no-picture">
+          {{ profile.firstName.charAt(0) }}{{ (profile.lastName && profile.lastName.charAt(0)) || '' }}
+        </div>
+        <div class="change-picture-overlay">
+          Change picture
+        </div>
+        <input
+          #profilePictureInput
+          type="file"
+          accept="image/*"
+          style="display: none"
+          (change)="onProfilePictureChange($event)"
+        >
+      </div>
+    </div>
+
+    <h2>Welcome, {{ profile.firstName }}!</h2>
+    <h3 class="role-subtitle">Your role: {{ getRoleDisplay() }}</h3>
+
+    <div class="profile-info">
+      <h3>Basic Information</h3>
+      <div class="info-item">
+        <span class="label">First Name:</span>
+        <span class="value">{{ profile.firstName }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.lastName">
+        <span class="label">Last Name:</span>
+        <span class="value">{{ profile.lastName }}</span>
+      </div>
+      <div class="info-item" *ngIf="userEmail">
+        <span class="label">Email:</span>
+        <span class="value">{{ userEmail }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.bio">
+        <span class="label">About Me:</span>
+        <span class="value">{{ profile.bio }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.age">
+        <span class="label">Age:</span>
+        <span class="value">{{ profile.age }}</span>
+      </div>
+    </div>
+
+    <!-- Student Information -->
+    <div class="profile-info" *ngIf="isStudent() && profile.educationLevel">
+      <h3>Student Information</h3>
+      <div class="info-item">
+        <span class="label">Education Level:</span>
+        <span class="value">{{ profile.educationLevel }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.learningGoals">
+        <span class="label">Learning Goals:</span>
+        <span class="value">{{ profile.learningGoals }}</span>
+      </div>
+    </div>
+
+    <!-- Mentor Information -->
+    <div class="profile-info" *ngIf="isMentor() && profile.specialization">
+      <h3>Mentor Information</h3>
+      <div class="info-item">
+        <span class="label">Specialization:</span>
+        <span class="value">{{ profile.specialization }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.hourlyRate">
+        <span class="label">Hourly Rate:</span>
+        <span class="value">{{ profile.hourlyRate }} USD/hour</span>
+      </div>
+      <div class="info-item" *ngIf="profile.experienceYears">
+        <span class="label">Years of Experience:</span>
+        <span class="value">{{ profile.experienceYears }} years</span>
+      </div>
+      <div class="info-item" *ngIf="profile.mentorTargetStudents">
+        <span class="label">Target Audience:</span>
+        <span class="value">{{ profile.mentorTargetStudents }}</span>
+      </div>
+      <div class="info-item" *ngIf="profile.averageRating">
+        <span class="label">Average Rating:</span>
+        <span class="value">{{ profile.averageRating }}/5</span>
+      </div>
+    </div>
+
+    <!-- Profile Edit Button -->
+    <div class="profile-actions">
+      <button class="edit-btn" (click)="toggleEditForm()">
+        {{ isEditFormOpen ? 'Close Form' : 'Edit Profile' }}
+      </button>
+    </div>
+
+    <!-- Profile Edit Form -->
+    <div class="edit-form-container" *ngIf="isEditFormOpen">
+      <h3>Edit Profile</h3>
+      <form [formGroup]="updateForm" (ngSubmit)="onUpdateSubmit()">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" formControlName="firstName">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" formControlName="lastName">
+        </div>
+        <div class="form-group">
+          <label for="bio">About Me</label>
+          <textarea id="bio" formControlName="bio"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" formControlName="age">
+        </div>
+
+        <!-- Student Fields -->
+        <div *ngIf="isStudent()">
+          <h4>Student Information</h4>
+          <div class="form-group">
+            <label for="educationLevel">Education Level</label>
+            <input type="text" id="educationLevel" formControlName="educationLevel">
+          </div>
+          <div class="form-group">
+            <label for="learningGoals">Learning Goals</label>
+            <textarea id="learningGoals" formControlName="learningGoals"></textarea>
+          </div>
+        </div>
+
+        <!-- Mentor Fields -->
+        <div *ngIf="isMentor()">
+          <h4>Mentor Information</h4>
+          <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <input type="text" id="specialization" formControlName="specialization">
+          </div>
+          <div class="form-group">
+            <label for="hourlyRate">Hourly Rate</label>
+            <input type="number" id="hourlyRate" formControlName="hourlyRate">
+          </div>
+          <div class="form-group">
+            <label for="experienceYears">Years of Experience</label>
+            <input type="number" id="experienceYears" formControlName="experienceYears">
+          </div>
+          <div class="form-group">
+            <label for="mentorTargetStudents">Target Audience</label>
+            <textarea id="mentorTargetStudents" formControlName="mentorTargetStudents"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="save-btn" [disabled]="updateForm.invalid">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <div class="delete-confirm-overlay" *ngIf="isDeleteConfirmOpen">
+      <div class="delete-confirm-dialog">
+        <h3>Delete Account</h3>
+        <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+        <div class="delete-actions">
+          <button class="cancel-btn" (click)="toggleDeleteConfirm()">Cancel</button>
+          <button class="confirm-delete-btn" (click)="confirmDelete()">Confirm Deletion</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="logout-btn" (click)="logout()">Log Out</button>
+      <button class="delete-btn" (click)="toggleDeleteConfirm()">Delete Account</button>
+    </div>
+  </div>
+  <div class="profile-actions">
+    <button class="edit-btn" (click)="toggleEditForm()">
+      {{ isEditFormOpen ? 'Close Form' : 'Edit Profile' }}
+    </button>
+    <button class="chats-btn" (click)="router.navigate(['/chats'])">
+      My Messages
+    </button>
+  </div>
+</div>
